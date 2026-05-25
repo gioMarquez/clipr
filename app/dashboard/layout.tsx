@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
+import UserMenu from '@/app/components/UserMenu'
 
 const tabs = [
     { label: 'Resumen', href: '/dashboard' },
@@ -29,15 +30,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 <div className="flex items-center gap-2 text-blue-600 font-semibold text-lg">
                     ✂ CLIPR
                 </div>
-                <div className="flex items-center gap-4">
-                    <span className="text-gray-400 text-sm">🔔</span>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-xs font-medium">
-                            {initials}
-                        </div>
-                        {session.name}
-                    </div>
-                </div>
+                
+                
+
+               
+                <UserMenu
+                    name={session.name}
+                    email={session.email}
+                    initials={initials}
+                />
             </nav>
 
             {/* Tabs */}
