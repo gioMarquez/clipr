@@ -45,8 +45,8 @@ export default function ProfileForm({ user }: { user: User }) {
         <>
             {/* Info personal */}
             <div className="bg-white border border-gray-200 rounded-xl p-6 flex flex-col gap-4">
-                <div className="flex items-center gap-4 pb-4 border-b border-gray-100">
-                    <div className="w-16 h-16 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-xl font-medium">
+                <div className="flex items-center gap-4 pb-4">
+                    <div className="size-16 p-4 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-xl font-medium">
                         {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                     </div>
                     <div>
@@ -54,6 +54,8 @@ export default function ProfileForm({ user }: { user: User }) {
                         <p className="text-sm text-gray-400">{user.email}</p>
                     </div>
                 </div>
+
+                <div className=' border-b border-gray-100'/>
 
                 <form action={updateProfile} className="flex flex-col gap-3">
                     <div className="grid grid-cols-2 gap-3">

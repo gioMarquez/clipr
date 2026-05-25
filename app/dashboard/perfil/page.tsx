@@ -16,7 +16,7 @@ export default async function PerfilPage() {
     if (!user) redirect('/login')
 
     return (
-        <div className="max-w-2xl mx-auto flex flex-col gap-6">
+        <div className="max-w-lg mx-auto flex flex-col gap-6">
             <div>
                 <h1 className="text-2xl font-semibold text-gray-900">Mi perfil</h1>
                 <p className="text-sm text-gray-400 mt-1">Administra tu información personal</p>
