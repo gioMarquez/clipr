@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  clipr-db:
+    image: postgres:16-alpine
+    container_name: clipr-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: clipr_user
+      POSTGRES_PASSWORD: clipr_pass
+      POSTGRES_DB: clipr_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - clipr_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U clipr_user -d clipr_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  clipr_pgdata:
