@@ -3,8 +3,17 @@
 import Image from "next/image"
 import CustomInput from "../components/CustomInput"
 import { loginUser } from "./actions"
+import { useState } from "react"
 
 const Page = () => {
+    const [form, setForm] = useState({ email: '', password: '' })
+
+    const isValid = form.email.trim() !== '' && form.password.trim() !== ''
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    }
+
     return (
         <div className="flex min-h-screen">
             <div className="w-1/2 flex items-center justify-center p-10">
@@ -16,8 +25,20 @@ const Page = () => {
                         </p>
                     </div>
 
-                    <CustomInput name="email" type="email" placeholder="Email" />
-                    <CustomInput name="password" type="password" placeholder="Contraseña" />
+                    <CustomInput
+                        name="email"
+                        type="email"
+                        placeholder="Email"
+                        value={form.email}
+                        onChange={handleChange}
+                    />
+                    <CustomInput
+                        name="password"
+                        type="password"
+                        placeholder="Contraseña"
+                        value={form.password}
+                        onChange={handleChange}
+                    />
 
                     <div className="flex items-center justify-between text-sm text-black">
                         <label className="flex items-center gap-2">
@@ -31,7 +52,8 @@ const Page = () => {
 
                     <button
                         type="submit"
-                        className="bg-black text-white py-3 rounded-lg transition-all duration-300 hover:bg-neutral-800 hover:scale-[1.02] hover:shadow-lg active:scale-95"
+                        disabled={!isValid}
+                        className="bg-black text-white py-3 rounded-lg transition-all duration-300 hover:bg-neutral-800 hover:scale-[1.02] hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
                     >
                         Entrar
                     </button>
