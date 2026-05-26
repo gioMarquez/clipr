@@ -16,6 +16,18 @@ interface Props {
     onClose: () => void
 }
 
+const REGEX = {
+    name: /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]{2,50}$/,
+    phone: /^\d{10}$/,
+    specialty: /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s,]{2,60}$/,
+}
+
+const ERRORS = {
+    name: 'Solo letras y espacios, entre 2 y 50 caracteres',
+    phone: 'Debe tener exactamente 10 dígitos',
+    specialty: 'Solo letras, espacios y comas, entre 2 y 60 caracteres',
+}
+
 export default function BarberModal({ barber, onClose }: Props) {
     const [form, setForm] = useState({
         name: barber?.name ?? '',
@@ -23,10 +35,30 @@ export default function BarberModal({ barber, onClose }: Props) {
         specialty: barber?.specialty ?? '',
     })
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const [touched, setTouched] = useState({
+        name: false,
+        phone: false,
+        specialty: false,
+    })
 
-    const isValid = form.name.trim() !== ''
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    }
+
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        setTouched(prev => ({ ...prev, [e.target.name]: true }))
+    }
+
+    const getError = (field: keyof typeof REGEX, value: string) => {
+        if (!value.trim()) return field === 'name' ? 'Campo requerido' : null
+        return REGEX[field].test(value.trim()) ? null : ERRORS[field]
+    }
+
+    const nameError = getError('name', form.name)
+    const phoneError = form.phone ? getError('phone', form.phone) : null
+    const specialtyError = form.specialty ? getError('specialty', form.specialty) : null
+
+    const isValid = !nameError && !phoneError && !specialtyError && form.name.trim() !== ''
     const action = barber ? updateBarber : createBarber
 
     return (
@@ -44,15 +76,53 @@ export default function BarberModal({ barber, onClose }: Props) {
 
                     <div className="flex flex-col gap-1">
                         <label className="text-xs text-gray-500">Nombre completo *</label>
-                        <CustomInput name="name" type="text" value={form.name} onChange={handleChange} placeholder="Ej. Luis González" />
+                        <CustomInput
+                            name="name"
+                            type="text"
+                            value={form.name}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="Ej. Luis González"
+                        />
+                        {touched.name && nameError && (
+                            <p className="text-red-500 text-xs">{nameError}</p>
+                        )}
                     </div>
+
                     <div className="flex flex-col gap-1">
                         <label className="text-xs text-gray-500">Teléfono</label>
-                        <CustomInput name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="Ej. 2411234567" />
+                        <CustomInput
+                            name="phone"
+                            type="tel"
+                            value={form.phone}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="Ej. 2411234567"
+                            maxLength={10}
+                            onKeyDown={(e) => {
+                                if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) {
+                                    e.preventDefault()
+                                }
+                            }}
+                        />
+                        {touched.phone && phoneError && (
+                            <p className="text-red-500 text-xs">{phoneError}</p>
+                        )}
                     </div>
+
                     <div className="flex flex-col gap-1">
                         <label className="text-xs text-gray-500">Especialidad</label>
-                        <CustomInput name="specialty" type="text" value={form.specialty} onChange={handleChange} placeholder="Ej. Corte clásico, Barba" />
+                        <CustomInput
+                            name="specialty"
+                            type="text"
+                            value={form.specialty}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="Ej. Corte clásico, Barba"
+                        />
+                        {touched.specialty && specialtyError && (
+                            <p className="text-red-500 text-xs">{specialtyError}</p>
+                        )}
                     </div>
 
                     <div className="flex gap-2 justify-end pt-2">
