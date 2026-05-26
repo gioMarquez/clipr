@@ -7,7 +7,7 @@ const tabs = [
     { label: 'Resumen', href: '/dashboard' },
     { label: 'Calendario', href: '/dashboard/calendario' },
     { label: 'Clientes', href: '/dashboard/clientes' },
-    { label: 'Barberos', href: '/dashboard/barberos' },
+    { label: 'Barberos', href: '/dashboard/barbers' },
     { label: 'Reportes', href: '/dashboard/reportes' },
 ]
 
