@@ -96,12 +96,12 @@ export default function Charts({
 					<BarChart data={incomeByMonth}>
 						<XAxis dataKey="month" tick={{ fontSize: 11 }} />
 						<YAxis tick={{ fontSize: 11 }} />
-						<Tooltip
-							formatter={(v: number) => [
-								`$${v.toLocaleString()}`,
-								"Ingresos",
-							]}
-						/>
+                        <Tooltip
+                            formatter={(value) => [
+                                `$${Number(value ?? 0).toLocaleString()}`,
+                                "Ingresos",
+                            ]}
+                        />
 						<Bar
 							dataKey="total"
 							fill="#3b82f6"
