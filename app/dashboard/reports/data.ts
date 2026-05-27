@@ -22,6 +22,8 @@ export async function getReportsData() {
 		orderBy: { date: "asc" },
 	});
 
+	type Appointment = (typeof appointments)[number];
+
 	// — Ingresos por mes —
 	const incomeByMonth = Array.from({ length: 12 }, (_, i) => {
 		const month = new Date(now.getFullYear(), i, 1).toLocaleString(
@@ -31,24 +33,31 @@ export async function getReportsData() {
 
 		const total = appointments
 			.filter(
-				(a) =>
+				(a: Appointment) =>
 					a.status === "COMPLETED" &&
 					new Date(a.date).getMonth() === i,
 			)
-			.reduce((sum, a) => sum + a.price, 0);
+			.reduce((sum: number, a: Appointment) => sum + a.price, 0);
 
 		return { month, total };
 	});
 
 	// — Citas por estado —
 	const statusCount = {
-		COMPLETED: appointments.filter((a) => a.status === "COMPLETED").length,
+		COMPLETED: appointments.filter(
+			(a: Appointment) => a.status === "COMPLETED",
+		).length,
 
-		CONFIRMED: appointments.filter((a) => a.status === "CONFIRMED").length,
+		CONFIRMED: appointments.filter(
+			(a: Appointment) => a.status === "CONFIRMED",
+		).length,
 
-		PENDING: appointments.filter((a) => a.status === "PENDING").length,
+		PENDING: appointments.filter((a: Appointment) => a.status === "PENDING")
+			.length,
 
-		CANCELLED: appointments.filter((a) => a.status === "CANCELLED").length,
+		CANCELLED: appointments.filter(
+			(a: Appointment) => a.status === "CANCELLED",
+		).length,
 	};
 
 	const citasPorEstado = [
@@ -84,7 +93,7 @@ export async function getReportsData() {
 		}
 	>();
 
-	appointments.forEach((a) => {
+	appointments.forEach((a: Appointment) => {
 		const prev = barberMap.get(a.barberId) ?? {
 			name: a.barber.name,
 			citas: 0,
@@ -103,7 +112,7 @@ export async function getReportsData() {
 	// — Servicios más solicitados —
 	const serviceMap = new Map<string, number>();
 
-	appointments.forEach((a) => {
+	appointments.forEach((a: Appointment) => {
 		serviceMap.set(a.service, (serviceMap.get(a.service) ?? 0) + 1);
 	});
 
@@ -122,8 +131,11 @@ export async function getReportsData() {
 		);
 
 		const total = appointments
-			.filter((a) => new Date(a.client.createdAt).getMonth() === i)
-			.map((a) => a.clientId)
+			.filter(
+				(a: Appointment) =>
+					new Date(a.client.createdAt).getMonth() === i,
+			)
+			.map((a: Appointment) => a.clientId)
 			.filter((id, idx, arr) => arr.indexOf(id) === idx).length;
 
 		return { month, total };
@@ -139,7 +151,7 @@ export async function getReportsData() {
 		}
 	>();
 
-	appointments.forEach((a) => {
+	appointments.forEach((a: Appointment) => {
 		const prev = clientMap.get(a.clientId) ?? {
 			name: a.client.name,
 			citas: 0,
