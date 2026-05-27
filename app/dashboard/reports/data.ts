@@ -130,13 +130,19 @@ export async function getReportsData() {
 			},
 		);
 
-		const total = appointments
-			.filter(
-				(a: Appointment) =>
-					new Date(a.client.createdAt).getMonth() === i,
-			)
-			.map((a: Appointment) => a.clientId)
-			.filter((id, idx, arr) => arr.indexOf(id) === idx).length;
+        const total = appointments
+            .filter(
+                (a: Appointment) =>
+                    new Date(a.client.createdAt).getMonth() === i,
+            )
+            .map((a: Appointment) => a.clientId)
+            .filter(
+                (
+                    id: string,
+                    idx: number,
+                    arr: string[],
+                ) => arr.indexOf(id) === idx,
+            ).length;
 
 		return { month, total };
 	});
