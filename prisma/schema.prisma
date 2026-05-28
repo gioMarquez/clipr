@@ -36,7 +36,7 @@ model Barber {
 model Client {
   id           String        @id @default(cuid())
   name         String
-  phone        String?
+  phone        String?       @unique
   email        String?
   appointments Appointment[]
   createdAt    DateTime      @default(now())
