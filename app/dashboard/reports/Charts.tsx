@@ -96,12 +96,12 @@ export default function Charts({
 					<BarChart data={incomeByMonth}>
 						<XAxis dataKey="month" tick={{ fontSize: 11 }} />
 						<YAxis tick={{ fontSize: 11 }} />
-                        <Tooltip
-                            formatter={(value) => [
-                                `$${Number(value ?? 0).toLocaleString()}`,
-                                "Ingresos",
-                            ]}
-                        />
+						<Tooltip
+							formatter={(value) => [
+								`$${Number(value ?? 0).toLocaleString()}`,
+								"Ingresos",
+							]}
+						/>
 						<Bar
 							dataKey="total"
 							fill="#3b82f6"
@@ -117,22 +117,21 @@ export default function Charts({
 					<ResponsiveContainer width="100%" height={220}>
 						<PieChart>
 							<Pie
-								data={citasPorEstado}
+								data={citasPorEstado.filter((e) => e.value > 0)}
 								dataKey="value"
 								nameKey="name"
 								cx="50%"
 								cy="50%"
 								outerRadius={80}
-								label={({ name, percent }) =>
-									`${name} ${((percent || 0 )* 100).toFixed(0)}%`
-								}
-								labelLine={false}
 							>
-								{citasPorEstado.map((e, i) => (
-									<Cell key={i} fill={e.color} />
-								))}
+								{citasPorEstado
+									.filter((e) => e.value > 0)
+									.map((e, i) => (
+										<Cell key={i} fill={e.color} />
+									))}
 							</Pie>
-							<Tooltip />
+							<Tooltip formatter={(v) => [v, "citas"]} />
+							<Legend />
 						</PieChart>
 					</ResponsiveContainer>
 				</Card>
