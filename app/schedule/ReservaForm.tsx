@@ -9,20 +9,19 @@ interface Barber {
     specialty: string | null
 }
 
-const SERVICES = [
-    'Corte clásico',
-    'Corte + barba',
-    'Barba',
-    'Afeitado',
-    'Corte infantil',
-]
+interface ServiceOption {
+    id: string
+    name: string
+    price: number
+    duration: number
+}
 
 const REGEX = {
     name: /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]{2,50}$/,
     phone: /^\d{10}$/,
 }
 
-export default function ReservaForm({ barbers }: { barbers: Barber[] }) {
+export default function ReservaForm({ barbers, services }: { barbers: Barber[], services: ServiceOption[] }) {
     const [form, setForm] = useState({
         name: '', phone: '', barberId: '', service: '', date: '', time: '',
     })
@@ -91,7 +90,6 @@ export default function ReservaForm({ barbers }: { barbers: Barber[] }) {
 
     return (
         <form action={handleSubmit} className="flex flex-col gap-4">
-
             <div className="flex flex-col gap-1">
                 <label className="text-xs text-gray-500">Nombre completo *</label>
                 <input
@@ -144,7 +142,11 @@ export default function ReservaForm({ barbers }: { barbers: Barber[] }) {
                     className={`${inputClass} bg-white`}
                 >
                     <option value="">Selecciona un servicio</option>
-                    {SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
+                    {services.map(s => (
+                        <option key={s.id} value={s.name}>
+                            {s.name} — ${s.price.toLocaleString('es-MX')} · {s.duration} min
+                        </option>
+                    ))}
                 </select>
                 {touched.service && errors.service && <p className="text-red-500 text-xs">{errors.service}</p>}
             </div>
