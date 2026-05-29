@@ -54,13 +54,26 @@ model Appointment {
   barber    Barber            @relation(fields: [barberId], references: [id])
   clientId  String
   client    Client            @relation(fields: [clientId], references: [id])
+  serviceId String?
+  svc       Service?          @relation(fields: [serviceId], references: [id])
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
-}
+}P
 
 enum AppointmentStatus {
   PENDING
   CONFIRMED
   COMPLETED
   CANCELLED
+}
+
+model Service {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  price        Float
+  duration     Int           // minutos
+  description  String?
+  appointments Appointment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
